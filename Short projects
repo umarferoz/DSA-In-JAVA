@@ -1,0 +1,272 @@
+// ✅ STRING OPERATIONS
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        // 1. Vowel and Consonant Count
+        StringOperations.countVowelsAndConsonants("Hello World");
+
+        // 2. Word Frequency
+        StringOperations.wordFrequency("this is a test this is simple");
+
+        // 3. Most Frequent Character
+        StringOperations.mostFrequentChar("programming");
+
+        // 4. Anagram Check
+        System.out.println("Anagram: "+StringOperations.isAnagram("listen", "silent"));
+
+        // 5. Remove Chars Less Than K
+        System.out.println("Filtered: "+StringOperations.removeLessThanK("aabbccdd", 2));
+
+        // 6. Balanced Brackets
+        System.out.println("Balanced: "+StackOperations.isBalanced("(a[b]{c})"));
+
+        // 7. Unbalanced Bracket Positions
+        StackOperations.unbalancedPositions("(()))(");
+
+        // 8. Balanced Round Brackets
+        System.out.println("Round Balanced: "+StackOperations.balancedRound("(()())"));
+
+        // Tree Setup for tests
+        Node root=new Node(1);
+        root.left=new Node(2);
+        root.right=new Node(2);
+        root.left.left=new Node(3);
+        root.right.right=new Node(3);
+
+        // 9. Symmetric Tree
+        System.out.println("Symmetric: "+TreeOperations.isSymmetric(root));
+
+        // 10. Balanced Tree
+        System.out.println("Balanced Tree: "+(TreeOperations.checkHeight(root)!=-1));
+
+        // 11. Inorder Traversal
+        TreeOperations.inorder(root); System.out.println();
+
+        // 12. Min/Max in BST
+        System.out.println("Min: "+TreeOperations.findMin(root)+", Max: "+TreeOperations.findMax(root));
+
+        // 13. Validate BST
+        System.out.println("Valid BST: "+TreeOperations.isBST(root,Integer.MIN_VALUE,Integer.MAX_VALUE));
+
+        // 14. BFS Adjacency Matrix
+        int[][] matrix={{0,1,1},{1,0,0},{1,0,0}};
+        GraphOps.bfsMatrix(matrix,0); System.out.println();
+
+        // 15. DFS Adjacency List
+        Map<Integer,List<Integer>> graph=new HashMap<>();
+        for(int i=0;i<4;i++) graph.put(i,new ArrayList<>());
+        graph.get(0).add(1); graph.get(0).add(2);
+        graph.get(1).add(3); graph.get(2).add(3);
+        GraphOps.dfsList(graph,0,new HashSet<>()); System.out.println();
+
+        // 16. Reachable Nodes
+        GraphOps.reachable(graph,0); System.out.println();
+
+        // 17. Cycle Detection
+        System.out.println("Has Cycle: "+GraphOps.hasCycle(graph,0,new HashSet<>(),new HashSet<>()));
+
+        // 18. Graph Connectivity
+        System.out.println("Connected: "+GraphOps.isConnected(graph));
+    }
+}
+
+
+
+class StringOperations {
+    // 1. Count vowels and consonants
+    static void countVowelsAndConsonants(String s) {
+        int v=0,c=0;
+        for(char ch:s.toLowerCase().toCharArray()){
+            if("aeiou".indexOf(ch)>=0) v++;
+            else if(Character.isLetter(ch)) c++;
+        }
+        System.out.println("Vowels: "+v+", Consonants: "+c);
+    }
+
+    // 2. Word frequency
+    static void wordFrequency(String s) {
+        var map = new HashMap<String, Integer>();
+        for(String word:s.toLowerCase().split("\\s+"))
+            map.put(word, map.getOrDefault(word,0)+1);
+        map.forEach((k,v)->System.out.println(k+":"+v));
+    }
+
+    // 3. Most frequent character
+    static void mostFrequentChar(String s) {
+        var map = new HashMap<Character,Integer>();
+        for(char c:s.toCharArray())
+            map.put(c,map.getOrDefault(c,0)+1);
+        char max=' '; int count=0;
+        for(var e:map.entrySet())
+            if(e.getValue()>count){ max=e.getKey(); count=e.getValue(); }
+        System.out.println(max+":"+count);
+    }
+
+    // 4. Anagram check
+    static boolean isAnagram(String a, String b) {
+        if(a.length()!=b.length()) return false;
+        char[] x=a.toCharArray(),y=b.toCharArray();
+        Arrays.sort(x); Arrays.sort(y);
+        return Arrays.equals(x,y);
+    }
+
+    // 5. Remove chars appearing < k times
+    static String removeLessThanK(String s, int k) {
+        var map=new HashMap<Character,Integer>();
+        for(char c:s.toCharArray())
+            map.put(c,map.getOrDefault(c,0)+1);
+        StringBuilder sb=new StringBuilder();
+        for(char c:s.toCharArray())
+            if(map.get(c)>=k) sb.append(c);
+        return sb.toString();
+    }
+}
+
+
+// ✅ STACK OPERATIONS
+class StackOperations {
+    // 1. Check balanced brackets
+    static boolean isBalanced(String s) {
+        var stack=new Stack<Character>();
+        for(char c:s.toCharArray()){
+            if("({[".indexOf(c)>=0) stack.push(c);
+            else if(")}]".indexOf(c)>=0) {
+                if(stack.isEmpty()) return false;
+                char o=stack.pop();
+                if((o=='('&&c!=')')||(o=='{'&&c!='}')||(o=='['&&c!=']')) return false;
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    // 2. Count unbalanced brackets positions
+    static void unbalancedPositions(String s) {
+        var stack=new Stack<Integer>();
+        for(int i=0;i<s.length();i++){
+            char c=s.charAt(i);
+            if(c=='(') stack.push(i);
+            else if(c==')'){
+                if(stack.isEmpty()) System.out.println("Unmatched ) at "+i);
+                else stack.pop();
+            }
+        }
+        while(!stack.isEmpty()) System.out.println("Unmatched ( at "+stack.pop());
+    }
+
+    // 3. Only round brackets
+    static boolean balancedRound(String s){
+        int c=0;
+        for(char ch:s.toCharArray()){
+            if(ch=='(') c++;
+            else if(ch==')') {
+                if(c==0) return false;
+                c--;
+            }
+        }
+        return c==0;
+    }
+}
+
+
+// ✅ TREE OPERATIONS
+class Node{
+    int data; Node left, right;
+    Node(int d){data=d;}
+}
+
+class TreeOperations {
+    // 1. Symmetric tree
+    static boolean isSymmetric(Node r){
+        return isMirror(r,r);
+    }
+    static boolean isMirror(Node a, Node b){
+        if(a==null&&b==null) return true;
+        if(a==null||b==null||a.data!=b.data) return false;
+        return isMirror(a.left,b.right)&&isMirror(a.right,b.left);
+    }
+
+    // 2. Balanced tree
+    static int checkHeight(Node n){
+        if(n==null) return 0;
+        int l=checkHeight(n.left), r=checkHeight(n.right);
+        if(l==-1||r==-1||Math.abs(l-r)>1) return -1;
+        return Math.max(l,r)+1;
+    }
+
+    // 3. Inorder traversal
+    static void inorder(Node n){
+        if(n!=null){
+            inorder(n.left);
+            System.out.print(n.data+" ");
+            inorder(n.right);
+        }
+    }
+
+    // 4. Min/Max in BST
+    static int findMin(Node n){ while(n.left!=null) n=n.left; return n.data; }
+    static int findMax(Node n){ while(n.right!=null) n=n.right; return n.data; }
+
+    // 5. Validate BST
+    static boolean isBST(Node n, int min, int max){
+        if(n==null) return true;
+        if(n.data<=min||n.data>=max) return false;
+        return isBST(n.left,min,n.data)&&isBST(n.right,n.data,max);
+    }
+}
+
+
+// ✅ GRAPH OPERATIONS
+class GraphOps{
+    // 6. Adjacency matrix + BFS
+    static void bfsMatrix(int[][] g,int start){
+        int n=g.length;
+        boolean[] v=new boolean[n];
+        var q=new LinkedList<Integer>();
+        q.add(start); v[start]=true;
+        while(!q.isEmpty()){
+            int x=q.poll();
+            System.out.print(x+" ");
+            for(int i=0;i<n;i++)
+                if(g[x][i]==1&&!v[i]){q.add(i);v[i]=true;}
+        }
+    }
+
+    // 7. DFS using adjacency list
+    static void dfsList(Map<Integer,List<Integer>> g, int u, Set<Integer> v){
+        v.add(u);
+        System.out.print(u+" ");
+        for(int n:g.get(u))
+            if(!v.contains(n)) dfsList(g,n,v);
+    }
+
+    // 8. Nodes reachable from given node
+    static void reachable(Map<Integer,List<Integer>> g, int u){
+        dfsList(g,u,new HashSet<>());
+    }
+
+    // 9. Detect cycle (directed)
+    static boolean hasCycle(Map<Integer,List<Integer>> g, int u, Set<Integer> v, Set<Integer> path){
+        v.add(u); path.add(u);
+        for(int n:g.get(u)){
+            if(!v.contains(n)&&hasCycle(g,n,v,path)) return true;
+            else if(path.contains(n)) return true;
+        }
+        path.remove(u);
+        return false;
+    }
+
+    // 10. Check graph connectivity (BFS)
+    static boolean isConnected(Map<Integer,List<Integer>> g){
+        var q=new LinkedList<Integer>();
+        Set<Integer> v=new HashSet<>();
+        int start=g.keySet().iterator().next();
+        q.add(start); v.add(start);
+        while(!q.isEmpty()){
+            int u=q.poll();
+            for(int n:g.get(u))
+                if(!v.contains(n)) {v.add(n);q.add(n);}
+        }
+        return v.size()==g.size();
+    }
+}
