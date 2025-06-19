@@ -1,0 +1,132 @@
+public class Main {
+    public static void main(String[] args) {
+        BinaryTree binaryTree = new BinaryTree();
+        binaryTree.insert(8);
+        binaryTree.insert(7);
+        binaryTree.insert(9);
+        binaryTree.insert(5);
+        binaryTree.insert(11);
+
+        binaryTree.delete(7);
+        binaryTree.delete(11);
+
+        System.out.print("Inorder Traversal: ");
+        binaryTree.inorderTraverse();
+
+        System.out.println("\nIs the tree symmetric? " + binaryTree.isSymmetric());
+        System.out.println("Is the tree height-balanced? " + binaryTree.isBalanced());
+    }
+}
+
+// Node class
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    public Node(int data) {
+        this.data = data;
+    }
+}
+
+// BinaryTree class
+class BinaryTree {
+    Node root;
+
+    void insert(int data) {
+        root = insertRecursion(root, data);
+    }
+
+    Node insertRecursion(Node root, int data) {
+        if (root == null) {
+            root = new Node(data);
+        } else if (data < root.data) {
+            root.left = insertRecursion(root.left, data);
+        } else if (data > root.data) {
+            root.right = insertRecursion(root.right, data);
+        }
+        return root;
+    }
+
+    void delete(int data) {
+        root = deleteRecursion(root, data);
+    }
+
+    Node deleteRecursion(Node root, int data) {
+        if (root == null) {
+            return null;
+        } else if (data < root.data) {
+            root.left = deleteRecursion(root.left, data);
+        } else if (data > root.data) {
+            root.right = deleteRecursion(root.right, data);
+        } else {
+            if (root.left == null && root.right == null) {
+                return null;
+            } else if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                root.data = findMin(root.right);
+                root.right = deleteRecursion(root.right, root.data);
+            }
+        }
+        return root;
+    }
+
+    int findMin(Node root) {
+        int minValue = root.data;
+        while (root.left != null) {
+            minValue = root.left.data;
+            root = root.left;
+        }
+        return minValue;
+    }
+
+    void inorderTraverse() {
+        if (root == null) {
+            System.out.println("Tree is Empty.");
+        } else {
+            inorderRecursion(root);
+        }
+    }
+
+    void inorderRecursion(Node root) {
+        if (root != null) {
+            inorderRecursion(root.left);
+            System.out.print(root.data + " > ");
+            inorderRecursion(root.right);
+        }
+    }
+
+    // ✅ Symmetry check
+    boolean isSymmetric() {
+        return isMirror(root, root);
+    }
+
+    boolean isMirror(Node node1, Node node2) {
+        if (node1 == null && node2 == null) return true;
+        if (node1 == null || node2 == null) return false;
+        if (node1.data != node2.data) return false;
+
+        return isMirror(node1.left, node2.right) && isMirror(node1.right, node2.left);
+    }
+
+    boolean isBalanced() {
+        return checkHeight(root) != -1;
+    }
+
+    int checkHeight(Node node) {
+        if (node == null) return 0;
+
+        int leftHeight = checkHeight(node.left);
+        if (leftHeight == -1) return -1;
+
+        int rightHeight = checkHeight(node.right);
+        if (rightHeight == -1) return -1;
+
+        if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+}
