@@ -1,0 +1,536 @@
+// ✅ Question 1: Count Vowels and Consonants
+import java.util.*;
+
+public class Question1 {
+    public static void main(String[] args) {
+        String text = "Hello World";
+        int vowels = 0, consonants = 0;
+        text = text.toLowerCase();
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c >= 'a' && c <= 'z') {
+                if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                    vowels++;
+                } else {
+                    consonants++;
+                }
+            }
+        }
+        System.out.println("Vowels: " + vowels);
+        System.out.println("Consonants: " + consonants);
+    }
+}
+
+
+// ✅ Question 2: Word Frequency
+public class Question2 {
+    public static void main(String[] args) {
+        String sentence = "this is a test this is simple";
+        String[] words = sentence.split(" ");
+        HashMap<String, Integer> countMap = new HashMap<>();
+
+        for (String word : words) {
+            if (countMap.containsKey(word)) {
+                countMap.put(word, countMap.get(word) + 1);
+            } else {
+                countMap.put(word, 1);
+            }
+        }
+
+        for (String key : countMap.keySet()) {
+            System.out.println(key + ": " + countMap.get(key));
+        }
+    }
+}
+
+
+// ✅ Question 3: Most Frequent Character
+public class Question3 {
+    public static void main(String[] args) {
+        String str = "programming";
+        HashMap<Character, Integer> charMap = new HashMap<>();
+
+        for (char c : str.toCharArray()) {
+            if (charMap.containsKey(c)) {
+                charMap.put(c, charMap.get(c) + 1);
+            } else {
+                charMap.put(c, 1);
+            }
+        }
+
+        char mostFrequent = ' ';
+        int maxCount = 0;
+
+        for (char c : charMap.keySet()) {
+            if (charMap.get(c) > maxCount) {
+                mostFrequent = c;
+                maxCount = charMap.get(c);
+            }
+        }
+
+        System.out.println("Most frequent character: " + mostFrequent);
+    }
+}
+
+
+// ✅ Question 4: Anagram Check
+public class Question4 {
+    public static void main(String[] args) {
+        String str1 = "listen";
+        String str2 = "silent";
+
+        if (areAnagrams(str1, str2)) {
+            System.out.println("Strings are anagrams.");
+        } else {
+            System.out.println("Strings are not anagrams.");
+        }
+    }
+
+    public static boolean areAnagrams(String s1, String s2) {
+        if (s1.length() != s2.length()) return false;
+
+        char[] a = s1.toCharArray();
+        char[] b = s2.toCharArray();
+
+        Arrays.sort(a);
+        Arrays.sort(b);
+
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] != b[i]) return false;
+        }
+        return true;
+    }
+}
+
+
+// ✅ Question 5: Remove Characters Appearing Less Than K Times
+public class Question5 {
+    public static void main(String[] args) {
+        String text = "aabbccdd";
+        int k = 2;
+
+        HashMap<Character, Integer> charCount = new HashMap<>();
+        for (char c : text.toCharArray()) {
+            charCount.put(c, charCount.getOrDefault(c, 0) + 1);
+        }
+
+        String result = "";
+        for (char c : text.toCharArray()) {
+            if (charCount.get(c) >= k) {
+                result += c;
+            }
+        }
+
+        System.out.println("Filtered String: " + result);
+    }
+}
+
+// Tree & Graph
+// ✅ Question 9: Check if Binary Tree is Symmetric
+class Node {
+    int data;
+    Node left, right;
+    Node(int data) { this.data = data; }
+}
+
+public class Question9 {
+    public static void main(String[] args) {
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(2);
+        root.left.left = new Node(3);
+        root.right.right = new Node(3);
+
+        boolean symmetric = isSymmetric(root);
+        System.out.println("Tree is symmetric: " + symmetric);
+    }
+
+    public static boolean isSymmetric(Node root) {
+        return isMirror(root, root);
+    }
+
+    public static boolean isMirror(Node a, Node b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return (a.data == b.data) && isMirror(a.left, b.right) && isMirror(a.right, b.left);
+    }
+}
+
+
+// ✅ Question 10: Check if Binary Tree is Height Balanced
+public class Question10 {
+    public static void main(String[] args) {
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+
+        boolean balanced = isBalanced(root);
+        System.out.println("Tree is balanced: " + balanced);
+    }
+
+    public static boolean isBalanced(Node node) {
+        return checkHeight(node) != -1;
+    }
+
+    public static int checkHeight(Node node) {
+        if (node == null) return 0;
+        int left = checkHeight(node.left);
+        if (left == -1) return -1;
+        int right = checkHeight(node.right);
+        if (right == -1) return -1;
+        if (Math.abs(left - right) > 1) return -1;
+        return Math.max(left, right) + 1;
+    }
+}
+
+
+// ✅ Question 11: Inorder Traversal of Binary Tree
+public class Question11 {
+    public static void main(String[] args) {
+        Node root = new Node(10);
+        root.left = new Node(5);
+        root.right = new Node(15);
+        System.out.print("Inorder Traversal: ");
+        inorder(root);
+    }
+
+    public static void inorder(Node node) {
+        if (node != null) {
+            inorder(node.left);
+            System.out.print(node.data + " ");
+            inorder(node.right);
+        }
+    }
+}
+
+
+// ✅ Question 12: Find Min and Max in BST
+public class Question12 {
+    public static void main(String[] args) {
+        Node root = new Node(20);
+        root.left = new Node(10);
+        root.right = new Node(30);
+        root.left.left = new Node(5);
+        root.right.right = new Node(40);
+
+        System.out.println("Min value: " + findMin(root));
+        System.out.println("Max value: " + findMax(root));
+    }
+
+    public static int findMin(Node node) {
+        while (node.left != null) node = node.left;
+        return node.data;
+    }
+
+    public static int findMax(Node node) {
+        while (node.right != null) node = node.right;
+        return node.data;
+    }
+}
+
+
+// ✅ Question 13: Validate if Tree is BST
+public class Question13 {
+    public static void main(String[] args) {
+        Node root = new Node(20);
+        root.left = new Node(10);
+        root.right = new Node(30);
+
+        boolean isBST = validateBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        System.out.println("Tree is BST: " + isBST);
+    }
+
+    public static boolean validateBST(Node node, int min, int max) {
+        if (node == null) return true;
+        if (node.data <= min || node.data >= max) return false;
+        return validateBST(node.left, min, node.data) && validateBST(node.right, node.data, max);
+    }
+}
+
+// ✅ Question 14: Graph using Adjacency Matrix and BFS
+import java.util.*;
+
+public class Question14 {
+    public static void main(String[] args) {
+        int[][] graph = {
+                {0, 1, 1, 0},
+                {1, 0, 0, 1},
+                {1, 0, 0, 1},
+                {0, 1, 1, 0}
+        };
+        bfs(graph, 0);
+    }
+
+    public static void bfs(int[][] graph, int start) {
+        int n = graph.length;
+        boolean[] visited = new boolean[n];
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited[start] = true;
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            System.out.print(current + " ");
+
+            for (int i = 0; i < n; i++) {
+                if (graph[current][i] == 1 && !visited[i]) {
+                    visited[i] = true;
+                    queue.add(i);
+                }
+            }
+        }
+    }
+}
+
+
+// ✅ Question 15: DFS on Directed Graph (Adjacency List)
+public class Question15 {
+    public static void main(String[] args) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(0, Arrays.asList(1, 2));
+        graph.put(1, Arrays.asList(3));
+        graph.put(2, Arrays.asList(3));
+        graph.put(3, new ArrayList<>());
+
+        Set<Integer> visited = new HashSet<>();
+        dfs(graph, 0, visited);
+    }
+
+    public static void dfs(Map<Integer, List<Integer>> graph, int node, Set<Integer> visited) {
+        visited.add(node);
+        System.out.print(node + " ");
+        for (int neighbor : graph.get(node)) {
+            if (!visited.contains(neighbor)) {
+                dfs(graph, neighbor, visited);
+            }
+        }
+    }
+}
+
+
+// ✅ Question 16: Print All Reachable Nodes using DFS
+public class Question16 {
+    public static void main(String[] args) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(0, Arrays.asList(1, 2));
+        graph.put(1, Arrays.asList(3));
+        graph.put(2, Arrays.asList(3));
+        graph.put(3, new ArrayList<>());
+
+        System.out.print("Reachable from 0: ");
+        dfs(graph, 0, new HashSet<>());
+    }
+
+    public static void dfs(Map<Integer, List<Integer>> graph, int node, Set<Integer> visited) {
+        visited.add(node);
+        System.out.print(node + " ");
+        for (int neighbor : graph.get(node)) {
+            if (!visited.contains(neighbor)) {
+                dfs(graph, neighbor, visited);
+            }
+        }
+    }
+}
+
+
+// ✅ Question 17: Detect Cycle in Directed Graph using DFS
+public class Question17 {
+    public static void main(String[] args) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(0, Arrays.asList(1));
+        graph.put(1, Arrays.asList(2));
+        graph.put(2, Arrays.asList(0)); // cycle
+
+        boolean hasCycle = detectCycle(graph, 0, new HashSet<>(), new HashSet<>());
+        System.out.println("Graph has cycle: " + hasCycle);
+    }
+
+    public static boolean detectCycle(Map<Integer, List<Integer>> graph, int node, Set<Integer> visited, Set<Integer> stack) {
+        if (stack.contains(node)) return true;
+        if (visited.contains(node)) return false;
+
+        visited.add(node);
+        stack.add(node);
+
+        for (int neighbor : graph.get(node)) {
+            if (detectCycle(graph, neighbor, visited, stack)) return true;
+        }
+
+        stack.remove(node);
+        return false;
+    }
+}
+
+
+// ✅ Question 18: Check if Graph is Connected using BFS
+public class Question18 {
+    public static void main(String[] args) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(0, Arrays.asList(1, 2));
+        graph.put(1, Arrays.asList(0, 3));
+        graph.put(2, Arrays.asList(0, 3));
+        graph.put(3, Arrays.asList(1, 2));
+
+        boolean connected = isConnected(graph);
+        System.out.println("Graph is connected: " + connected);
+    }
+
+    public static boolean isConnected(Map<Integer, List<Integer>> graph) {
+        Set<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+
+        int start = graph.keySet().iterator().next();
+        visited.add(start);
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int neighbor : graph.get(current)) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        return visited.size() == graph.size();
+    }
+}
+// Stack
+
+// ✅ Question 1: Check Balanced Brackets () {} []
+import java.util.*;
+
+public class BracketCheck1 {
+    public static void main(String[] args) {
+        String expression = "(a+b)*[c-{d/e}]";
+        System.out.println("Balanced: " + isBalanced(expression));
+    }
+
+    public static boolean isBalanced(String expression) {
+        Stack<Character> bracketStack = new Stack<>();
+        for (char ch : expression.toCharArray()) {
+            if (ch == '(' || ch == '{' || ch == '[') bracketStack.push(ch);
+            else if (ch == ')' || ch == '}' || ch == ']') {
+                if (bracketStack.isEmpty()) return false;
+                char top = bracketStack.pop();
+                if ((ch == ')' && top != '(') || (ch == '}' && top != '{') || (ch == ']' && top != '[')) return false;
+            }
+        }
+        return bracketStack.isEmpty();
+    }
+}
+
+
+// ✅ Question 2: Count Unbalanced Parentheses and Their Positions
+public class BracketCheck2 {
+    public static void main(String[] args) {
+        String expression = "(()))(";
+        Stack<Integer> positionStack = new Stack<>();
+        for (int index = 0; index < expression.length(); index++) {
+            char ch = expression.charAt(index);
+            if (ch == '(') positionStack.push(index);
+            else if (ch == ')') {
+                if (positionStack.isEmpty()) System.out.println(") at position " + index + " is unmatched");
+                else positionStack.pop();
+            }
+        }
+        while (!positionStack.isEmpty()) System.out.println("( at position " + positionStack.pop() + " is unmatched");
+    }
+}
+
+
+// ✅ Question 3: Check Balanced Round Brackets Only ()
+public class BracketCheck3 {
+    public static void main(String[] args) {
+        String expression = "((()))()";
+        System.out.println("Balanced round brackets: " + isBalanced(expression));
+    }
+
+    public static boolean isBalanced(String expression) {
+        int openCount = 0;
+        for (char ch : expression.toCharArray()) {
+            if (ch == '(') openCount++;
+            else if (ch == ')') {
+                if (openCount == 0) return false;
+                openCount--;
+            }
+        }
+        return openCount == 0;
+    }
+}
+
+
+// ✅ Question 4: Remove Minimum Invalid Parentheses
+public class BracketCheck4 {
+    public static void main(String[] args) {
+        String expression = "()())()";
+        List<String> validResults = removeInvalid(expression);
+        for (String result : validResults) {
+            System.out.println(result);
+        }
+    }
+
+    public static List<String> removeInvalid(String expression) {
+        List<String> results = new ArrayList<>();
+        Queue<String> queue = new LinkedList<>();
+        Set<String> seen = new HashSet<>();
+        queue.add(expression);
+        seen.add(expression);
+        boolean foundValid = false;
+
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
+            if (isValid(current)) {
+                results.add(current);
+                foundValid = true;
+            }
+            if (foundValid) continue;
+            for (int i = 0; i < current.length(); i++) {
+                if (current.charAt(i) != '(' && current.charAt(i) != ')') continue;
+                String next = current.substring(0, i) + current.substring(i + 1);
+                if (!seen.contains(next)) {
+                    queue.add(next);
+                    seen.add(next);
+                }
+            }
+        }
+        return results;
+    }
+
+    public static boolean isValid(String expression) {
+        int openCount = 0;
+        for (char ch : expression.toCharArray()) {
+            if (ch == '(') openCount++;
+            else if (ch == ')') {
+                if (openCount == 0) return false;
+                openCount--;
+            }
+        }
+        return openCount == 0;
+    }
+}
+
+
+// ✅ Question 5: Validate Balanced Parentheses in Math Expression
+public class BracketCheck5 {
+    public static void main(String[] args) {
+        String expression = "5*(3+(2-1))";
+        System.out.println("Balanced: " + isBalanced(expression));
+    }
+
+    public static boolean isBalanced(String expression) {
+        Stack<Character> bracketStack = new Stack<>();
+        for (char ch : expression.toCharArray()) {
+            if (ch == '(') bracketStack.push(ch);
+            else if (ch == ')') {
+                if (bracketStack.isEmpty()) return false;
+                bracketStack.pop();
+            }
+        }
+        return bracketStack.isEmpty();
+    }
+}
